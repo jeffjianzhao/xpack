@@ -1,7 +1,7 @@
 <h1>xpack</h1>
 An algorithm conducts circle packing by best satisfying node horizontal constraints of input data items. 
 
-The algorithm was used in generating the conversational thread visualization in a journal paper: <a href="http://www.cs.toronto.edu/~jianzhao/papers/fluxflow.pdf">J. Zhao, N. Cao, Z. Wen, Y. Song, Y.-R. Lin, and C. Collins, #FluxFlow: Visual Analysis of Anomalous Information Spreading on Social Media, IEEE Transactions on Visualization and Computer Graphics (Proceedings of VAST 2014), 20(12), pp. 1773-1782, Dec 2014.</a>
+The algorithm was used in generating the conversational thread visualization in a journal paper: J. Zhao, N. Cao, Z. Wen, Y. Song, Y.-R. Lin, and C. Collins, <a href="http://www.cs.toronto.edu/~jianzhao/papers/fluxflow.pdf">#FluxFlow: Visual Analysis of Anomalous Information Spreading on Social Media</a>, IEEE Transactions on Visualization and Computer Graphics (Proceedings of VAST 2014), 20(12), pp. 1773-1782, Dec 2014.
 
 <img src="http://www.cs.toronto.edu/~jianzhao/snapshots/fluxflow.png" />
 

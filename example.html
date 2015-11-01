@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>	
+		<script type="text/javascript" src="xpack.js"></script>
+		<style type="text/css">
+			.xline {
+				stroke: black;
+				stroke-width: 2px;
+			}
+
+			.node {
+				stroke: black;
+				fill-opacity: 0.9;
+			}
+
+			.ribbon {
+				fill: lightgray;
+				fill-opacity: 0.6;
+			}
+		</style>	
+	</head>
+
+	<body>
+		<div id="canvas"></div>
+		<script type="text/javascript">
+			var width = 800, height = 200;
+
+			var data = [];
+			for(var i = 0; i < 500; i++) {
+				var d = {};
+				d.x = 10 + Math.random() * (width - 10);
+				d.r = 2 + Math.random() * 8;
+				d.score = Math.random();
+
+				data.push(d);
+			}
+
+
+			// draw packed circles and the central line
+			var clr = d3.scale.linear()
+				.domain([0, 0.5, 1])
+				.range(["#f1a340", "#f7f7f7", "#998ec3"]);
+			var threshold = 0.5;
+
+			var pack = xpack();
+			var packed = pack(data, threshold);
+
+			if(height < packed.rect.yMax - packed.rect.yMin)
+				height = packed.rect.yMax - packed.rect.yMin;
+			if(width < packed.rect.xMax - packed.rect.xMin)
+				width = packed.rect.xMax - packed.rect.xMin;
+			var container = d3.select("#canvas")
+				.append("svg")
+				.attr("width", width + 40)
+				.attr("height", height + 40);
+
+			var drawing = container.append("g")
+				.attr("transform", "translate(10," + (height / 2 + 20) + ")");
+
+			drawing.append("line")
+				.attr("class", "xline")
+				.attr("x1", 0)
+				.attr("x2", width)
+				.attr("y1", 0)
+				.attr("y2", 0);
+
+			drawing.selectAll("circle")
+				.data(packed.nodes)
+				.enter()
+				.append("circle")
+				.attr("class", "node")
+				.attr("cx", function(d) {return d.px;})
+				.attr("cy", function(d) {return d.py;})
+				.attr("r", function(d) {return d.r;})
+				.style("fill", function(d) {return clr(d.score);});
+
+			// draw outline ribbons
+			var hist = d3.layout.histogram().bins(40).range([0, width]);
+			hist.value(function(u) {return u.x;});
+			var outlineSample = hist(data.filter(function(u) {return u.score < threshold;}))
+				.map(function(bin) {
+					return {x: bin.x + bin.dx / 2, y: bin.y};
+				});	
+			
+			hist.value(function(u) {return u.px;});
+			hist(packed.outline.up).forEach(function (bin, i) {			
+				if (bin.y != 0)
+					outlineSample[i].up = d3.min(bin, function(d) {return d.py - d.r;});
+				else
+					outlineSample[i].up = 0;				
+			});
+			hist(packed.outline.down).forEach(function (bin, i) {
+				if (bin.y != 0)
+					outlineSample[i].down = d3.max(bin, function(d) {return d.py + d.r;});
+				else
+					outlineSample[i].down = 0;
+			});
+
+			var outlineChart = [
+				d3.svg.area().interpolate("monotone")
+					.x(function(d) {return d.x;})
+					.y1(function(d) {return d.up - d.y;})
+					.y0(function(d) {return d.up;}),
+				d3.svg.area().interpolate("monotone")
+					.x(function(d) {return d.x;})
+					.y1(function(d) {return d.down + d.y;})
+					.y0(function(d) {return d.down;}),
+			];
+			var ribbons = drawing.selectAll(".ribbon")
+				.data([outlineSample, outlineSample]);
+			ribbons.enter().append("path")
+				.attr("class", "ribbon")
+				.attr("d", function(d, i) {return outlineChart[i](d);})
+
+		</script>
+	</body>
+
+</html>
