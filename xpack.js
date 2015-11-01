@@ -43,15 +43,22 @@ xpack = function() {
 		
 	//public methods///////////////////////////////////////////////////////////
 	function xpack(data, packscore) {
+        if(data.length == 0)
+            return {nodes:[], rect:{xMin:0, xMax:0, yMin:0, yMax:0}, outline:{up:[], down:[]}};
+
 		var threshold = 0;
 		if (typeof packscore != "undefined")
 			threshold = packscore;
 		
+        // not packing nodes below the threshold
 		data.filter(function(d) {return d.score < threshold;})
 			.forEach(function(d) {d.px = undefined; d.py = undefined;});
 		
-	    var nodes = data.filter(function(d) {return d.score >= threshold;});
-	    packBounds = [];
+        // packing nodes above the threshold
+        var nodes = data;
+        if(data[0].score)
+            nodes = data.filter(function(d) {return d.score >= threshold;});
+        packBounds = [];
 	    packOutline = [];
         rect = {xMin : 0, yMin : 0, xMax : 0, yMax : 0};
         outline = {up:[], down:[]};
