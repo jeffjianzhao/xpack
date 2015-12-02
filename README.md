@@ -1,12 +1,12 @@
 <h1>xpack</h1>
-An algorithm conducts circle packing by best satisfying node horizontal constraints of input data items. 
+An algorithm conducts circle packing by best satisfying node horizontal constraints of input data items.
 
 The algorithm was used in generating the conversational thread visualization in a journal paper: J. Zhao, N. Cao, Z. Wen, Y. Song, Y.-R. Lin, and C. Collins, <a href="http://www.cs.toronto.edu/~jianzhao/papers/fluxflow.pdf">#FluxFlow: Visual Analysis of Anomalous Information Spreading on Social Media</a>, IEEE Transactions on Visualization and Computer Graphics (Proceedings of VAST 2014), 20(12), pp. 1773-1782, Dec 2014.
 
 <a href="http://www.cs.toronto.edu/~jianzhao/webapp/FluxFlow/example/example.html"><img src="http://www.cs.toronto.edu/~jianzhao/webapp/FluxFlow/example/example.png" /></a>
 
 <h2>xpack()</h2>
-Creates a new pack layout with the default settings. 
+Creates a new pack layout with the default settings.
 
 <h2>xpack.xpos([<i>xpos</i>])</h2>
 If <i>xpos</i> is specified, sets the accessor to the specified function. If <i>xpos</i> is not specified, returns the current accessor, which assumes that the input data is an object with a numeric <i>x</i> attribute.
@@ -21,3 +21,31 @@ Returns an object with the following information. <br />
 <i>nodes</i> - the packed nodes with <i>px</i> and <i>py</i> as their positions; <br />
 <i>rect</i> - the bounding box of the layout: {<i>xMin</i>, <i>xMax</i>, <i>yMin</i>, <i>yMax</i>}; <br />
 <i>outline</i> - the upper and lower border nodes of the packed layout: {<i>up</i>, <i>down</i>}.
+
+### How to use
+
+##### Choice 1. Global
+
+Adding this library via ```<script>``` tag is the simplest way. By doing this, ```xpack``` is available in the global scope.
+
+```
+<script src="xpack.js"></script>
+```
+
+##### Choice 2: AMD
+
+If you use requirejs, xpack support AMD out of the box.
+
+```
+require(['path/to/xpack'], function(xpack) {
+  // do something
+});
+```
+
+##### Choice 3: node.js / browserify
+
+xpack also supports usage in commonjs style.
+
+```
+var xpack = require('path/to/xpack');
+```
