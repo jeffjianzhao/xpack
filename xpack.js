@@ -54,9 +54,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }(this,
 //EDIT: The dependencies are passed to this function
 function (){
-  //---------------------------------------------------
-  // BEGIN code for this module
-  //---------------------------------------------------
+//---------------------------------------------------
+// BEGIN code for this module
+//---------------------------------------------------
 
 // return module
 return function() {
@@ -357,7 +357,7 @@ return function() {
     return xpack;
 };
 
-  //---------------------------------------------------
-  // END code for this module
-  //---------------------------------------------------
+//---------------------------------------------------
+// END code for this module
+//---------------------------------------------------
 }));
