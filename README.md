@@ -22,7 +22,7 @@ Returns an object with the following information. <br />
 <i>rect</i> - the bounding box of the layout: {<i>xMin</i>, <i>xMax</i>, <i>yMin</i>, <i>yMax</i>}; <br />
 <i>outline</i> - the upper and lower border nodes of the packed layout: {<i>up</i>, <i>down</i>}.
 
-### Import to your project
+### How to use
 
 ##### Choice 1. Global
 
@@ -44,7 +44,7 @@ require(['path/to/xpack'], function(xpack) {
 
 ##### Choice 3: node.js / browserify
 
-Labella.js also supports usage in commonjs style.
+xpack also supports usage in commonjs style.
 
 ```
 var xpack = require('path/to/xpack');
