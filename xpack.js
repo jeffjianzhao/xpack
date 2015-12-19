@@ -61,8 +61,9 @@ function (){
 // return module
 return function() {
     //public variables///////////////////////////////////////////////////////////
-    var xpos = xpack_x,
-        radius = xpack_r;
+    var xpos   = function(d){return d.x;};
+    var radius = function(d){return d.r;};
+    var score  = function(d){return d.score;};
 
     //private variables///////////////////////////////////////////////////////////
     var packBounds,
@@ -80,26 +81,28 @@ return function() {
             threshold = packscore;
 
         // not packing nodes below the threshold
-        data.filter(function(d) {return d.score < threshold;})
+        data.filter(function(d) {return score(d) < threshold;})
             .forEach(function(d) {d.px = undefined; d.py = undefined;});
 
         // packing nodes above the threshold
         var nodes = data;
-        if(data[0].score)
-            nodes = data.filter(function(d) {return d.score >= threshold;});
+        if(data.length > 0 && score(data[0])!==null && score(data[0])!==undefined){
+            nodes = data.filter(function(d) {return score(d) >= threshold;});
+        }
         packBounds = [];
         packOutline = [];
         rect = {xMin : 0, yMin : 0, xMax : 0, yMax : 0};
         outline = {up:[], down:[]};
 
-        if (nodes.length === 0)
+        if (nodes.length === 0){
             return {nodes:nodes, rect:rect, outline:outline};
+        }
 
         var i;
 
         for (i = 0; i < nodes.length; i++) {
-            nodes[i].x = typeof xpos === "function" ? xpos(nodes[i]) : x;
-            nodes[i].r = typeof radius === "function" ? radius(nodes[i]) : r;
+            nodes[i].x = xpos(nodes[i]);
+            nodes[i].r = radius(nodes[i]);
             xpackLink(nodes[i]);
         }
 
@@ -244,14 +247,6 @@ return function() {
 
     }
 
-    function xpack_x(d) {
-        return d.x;
-    }
-
-    function xpack_r(d) {
-        return d.r;
-    }
-
     function bound(node, bd) {
         bd.xMin = Math.min(node.px - node.r, bd.xMin);
         bd.xMax = Math.max(node.px + node.r, bd.xMax);
@@ -340,16 +335,26 @@ return function() {
         delete node._pack_prev;
     }
 
+    function functor(val){
+        return (typeof val === "function") ? val : function(){ return val; };
+    }
+
     //expose public variables///////////////////////////////////////////////////////////
     xpack.xpos = function(_) {
         if (!arguments.length) return xpos;
-        xpos = _;
+        xpos = functor(_);
         return xpack;
     };
 
     xpack.radius = function(_) {
         if (!arguments.length) return radius;
-        radius = _;
+        radius = functor(_);
+        return xpack;
+    };
+
+    xpack.score = function(_) {
+        if (!arguments.length) return score;
+        score = functor(_);
         return xpack;
     };
 
