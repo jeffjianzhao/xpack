@@ -29,13 +29,12 @@
 			var data = [];
 			for(var i = 0; i < 500; i++) {
 				var d = {};
-				d.x = 10 + Math.random() * (width - 10);
-				d.r = 2 + Math.random() * 8;
-				d.score = Math.random();
+				d.x2 = 10 + Math.random() * (width - 10);
+				d.r2 = 2 + Math.random() * 8;
+				d.point = Math.random();
 
 				data.push(d);
 			}
-
 
 			// draw packed circles and the central line
 			var clr = d3.scale.linear()
@@ -43,7 +42,11 @@
 				.range(["#f1a340", "#f7f7f7", "#998ec3"]);
 			var threshold = 0.3;
 
-			var pack = xpack();
+			var pack = xpack()
+				.xpos(function(d){return d.x2;})
+				.radius(function(d){return d.r2;})
+				.score(function(d){return d.point;});
+
 			var packed = pack(data, threshold);
 
 			if(height < packed.rect.yMax - packed.rect.yMin)
@@ -73,12 +76,12 @@
 				.attr("cx", function(d) {return d.px;})
 				.attr("cy", function(d) {return d.py;})
 				.attr("r", function(d) {return d.r;})
-				.style("fill", function(d) {return clr(d.score);});
+				.style("fill", function(d) {return clr(d.point);});
 
 			// draw outline ribbons
 			var hist = d3.layout.histogram().bins(40).range([0, width]);
 			hist.value(pack.xpos());
-			var outlineSample = hist(data.filter(function(u) {return u.score < threshold;}))
+			var outlineSample = hist(data.filter(function(u) {return u.point < threshold;}))
 				.map(function(bin) {
 					return {x: bin.x + bin.dx / 2, y: bin.y};
 				});
@@ -111,7 +114,7 @@
 				.data([outlineSample, outlineSample]);
 			ribbons.enter().append("path")
 				.attr("class", "ribbon")
-				.attr("d", function(d, i) {return outlineChart[i](d);})
+				.attr("d", function(d, i) {return outlineChart[i](d);});
 
 		</script>
 	</body>
